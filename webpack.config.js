@@ -1,6 +1,8 @@
 const path = require('path');
 const glob = require('glob-all'); // 处理多路径
 
+console.log({glob})
+
 const Webpack = require('webpack');
 
 const PurifyCSS = require('purifycss-webpack'); // 去除废代码 css
