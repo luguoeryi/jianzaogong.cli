@@ -1,8 +1,6 @@
 const path = require('path');
 const glob = require('glob-all'); // 处理多路径
 
-console.log({glob})
-
 const Webpack = require('webpack');
 
 const PurifyCSS = require('purifycss-webpack'); // 去除废代码 css
@@ -12,7 +10,7 @@ const HtmlWebpackInlineChunkPlugin = require('html-webpack-inline-chunk-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 清除目录
 
 var extractScss = new ExtractTextWebpackPlugin({
-    filename: '[name]-bundle-[hash:5].css',
+    filename: 'assets/css/[name]-bundle-[hash:5].css',
     allChunks: false // 只提取初始化css
 })
 
@@ -23,9 +21,19 @@ module.exports = {
 
     output: {
         path: path.resolve(__dirname, 'dist'),
-        publicPath: './',
-        filename: 'js/[name]-bundle-[hash:5].js',
-        chunkFilename: 'js/[name]-bundle-[hash:5].js' // 动态打包名称
+        publicPath: '/',
+        filename: 'assets/js/[name]-bundle-[hash:5].js',
+        chunkFilename: 'assets/js/[name]-bundle-[hash:5].js' // 动态打包名称
+    },
+
+    devServer: {
+        port: 9001,
+
+        // iframe 模式，显示编译状态
+        // inline: false,
+
+        // html5 api, 404重定向到index
+        historyApiFallback: true
     },
 
     // resolve: { 本地引入需要指定路径
@@ -72,7 +80,7 @@ module.exports = {
                                 plugins: [
                                     // require('autoprefixer')(),
                                     require('postcss-sprites')({
-                                        spritePath: 'dist/assets/img',
+                                        spritePath: './dist/assets/img',
                                         retina: true
                                     }), // 合成雪碧图
                                     require('postcss-preset-env')() // 添加css前缀及蔚来语法
@@ -95,8 +103,8 @@ module.exports = {
                             name: '[name]-[hash:5].[ext]',
                             limit: 5000,
                             fallback: 'file-loader',
-                            // publicPath: './assets/img/',
-                            outputPath: 'assets/img/'
+                            publicPath: '/assets/img',
+                            outputPath: 'assets/img'
                             // useRelativePath: true
                         }
                     },
@@ -121,7 +129,7 @@ module.exports = {
                             name: '[name]-[hash:5].[ext]',
                             limit: 5000,
                             fallback: 'file-loader',
-                            // publicPath: './assets/fonts/',
+                            publicPath: '../fonts',
                             outputPath: 'assets/fonts'
                             // useRelativePath: true
                         }
@@ -135,7 +143,8 @@ module.exports = {
             //         {
             //             loader: 'html-loader',
             //             options: {
-            //                 attrs: [':data-src']
+            //                 attrs: ['img:src', 'img:data-src', 'audio:src'],
+            //                 minimize: true
             //             }
             //         }
             //     ]

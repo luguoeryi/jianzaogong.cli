@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "webpack -w --progress --display-reasons --color",
+    "server": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -39,7 +40,8 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.22.1",
     "url-loader": "^1.1.0",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7"
   },
   "browserslist": [
     ">= 1%",
