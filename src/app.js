@@ -11,3 +11,10 @@ console.log(a())
 console.log(b())
 
 $('div').addClass('new')
+
+$.get('/api/comments/show', {
+    id: '4193586758833502',
+    page: 1
+}, function (data) {
+    $('body').append(`<div>${JSON.stringify(data)}</div>`)
+})

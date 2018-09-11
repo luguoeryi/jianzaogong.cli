@@ -29,11 +29,28 @@ module.exports = {
     devServer: {
         port: 9001,
 
+        proxy: {
+            '/api': {
+                target: 'https://m.weibo.cn',
+                changeOrigin: true
+            }
+        },
+
         // iframe 模式，显示编译状态
         // inline: false,
 
         // html5 api, 404重定向到index
-        historyApiFallback: true
+        // historyApiFallback: true
+        historyApiFallback: {
+            rewrites: [
+                {
+                    from: /\/([a-zA-Z0-9]+\/?)([a-zA-Z0-9]+)/,
+                    to: function (context) {
+                        return '/' + context.match[1] + context.match[2] + '.html'
+                    }
+                }
+            ]
+        }
     },
 
     // resolve: { 本地引入需要指定路径
@@ -135,20 +152,20 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
 
-            // {
-            //     test: /\.html$/,
-            //     use: [
-            //         {
-            //             loader: 'html-loader',
-            //             options: {
-            //                 attrs: ['img:src', 'img:data-src', 'audio:src'],
-            //                 minimize: true
-            //             }
-            //         }
-            //     ]
-            // }
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: 'html-loader',
+                        options: {
+                            attrs: ['img:src', 'img:data-src', 'audio:src'],
+                            minimize: true
+                        }
+                    }
+                ]
+            }
         ]
     },
 
