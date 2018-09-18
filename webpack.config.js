@@ -26,8 +26,12 @@ module.exports = {
         chunkFilename: 'assets/js/[name]-bundle-[hash:5].js' // 动态打包名称
     },
 
+    devtool: 'cheap-module-source-map',
+
     devServer: {
         port: 9001,
+
+        overlay: true,
 
         proxy: {
             '/api': {
@@ -35,6 +39,10 @@ module.exports = {
                 changeOrigin: true
             }
         },
+        // 模块热更新
+        hot: true,
+        // 禁止全局刷新
+        hotOnly: true,
 
         // iframe 模式，显示编译状态
         // inline: false,
@@ -75,40 +83,44 @@ module.exports = {
 
             {
                 test: /\.scss$/, 
-                use: extractScss.extract({
-                    fallback: { // 处理完成后的回调， 利用style-loader插入到页面中
+                use: [
+                    {
                         loader: 'style-loader',
                         options: {
-                            singleton: true, // 合并
-                            transform: './css.transform.js' // 浏览器环境处理
+                            // singleton: true, // 合并
+                            transform: './css.transform.js', // 浏览器环境处理
+                            sourceMap: true
                         }
                     },
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                minimize: true
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                ident: 'postcss',   
-                                plugins: [
-                                    // require('autoprefixer')(),
-                                    require('postcss-sprites')({
-                                        spritePath: './dist/assets/img',
-                                        retina: true
-                                    }), // 合成雪碧图
-                                    require('postcss-preset-env')() // 添加css前缀及蔚来语法
-                                ]
-                            }
-                        },
-                        {
-                            loader: 'sass-loader'
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            minimize: true,
+                            sourceMap: true                            
                         }
-                    ]
-                })
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            ident: 'postcss',   
+                            plugins: [
+                                // require('autoprefixer')(),
+                                require('postcss-sprites')({
+                                    spritePath: './dist/assets/img',
+                                    retina: true
+                                }), // 合成雪碧图
+                                require('postcss-preset-env')() // 添加css前缀及蔚来语法
+                            ],
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                ]
             },
 
             {
@@ -179,7 +191,8 @@ module.exports = {
             ])
         }),
 
-        new Webpack.optimize.CommonsChunkPlugin({ // 提取公共代码
+        // 提取公共代码
+        new Webpack.optimize.CommonsChunkPlugin({
             name: 'manifest'
         }),
 
@@ -187,7 +200,8 @@ module.exports = {
             inlineChunks: ['manifest']
         }),
 
-        new Webpack.ProvidePlugin({ // 配置全局插件
+        // 配置全局插件
+        new Webpack.ProvidePlugin({
             $: 'jquery'
         }),
         
@@ -201,8 +215,16 @@ module.exports = {
             // chunks: ['app']
         }),
 
-        new Webpack.optimize.UglifyJsPlugin(), // 去除废代码js
+        // 去除废代码js
+        // new Webpack.optimize.UglifyJsPlugin(),
 
-        new CleanWebpackPlugin(['dist'])
+        // 清除目录
+        new CleanWebpackPlugin(['dist']),
+
+        // 热更新
+        new Webpack.HotModuleReplacementPlugin(),
+
+        // 热更新信息
+        new Webpack.NamedModulesPlugin()
     ]
 }

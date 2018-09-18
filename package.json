@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "webpack -w --progress --display-reasons --color",
-    "server": "webpack-dev-server --open",
+    "server": "webpack-dev-server --env development --open --config build/webpack.common.conf.js",
+    "build": "webpack --env production --config build/webpack.common.conf.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -41,7 +42,8 @@
     "style-loader": "^0.22.1",
     "url-loader": "^1.1.0",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^2.9.7",
+    "webpack-merge": "^4.1.4"
   },
   "browserslist": [
     ">= 1%",
