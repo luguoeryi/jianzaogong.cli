@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin') // 自动注入依赖
 const generateConfig = env => {
 
     const extractScss = new ExtractTextWebpackPlugin({
-        filename: 'assets/css/[name]-bundle-[hash:5].css',
+        filename: 'assets/css/[name]-bundle-[chunkhash:5].css',
         allChunks: false // 只提取初始化css
     })
 
@@ -91,14 +91,15 @@ const generateConfig = env => {
 
     return {
         entry: {
+            vendor: ['jquery'],
             app: './src/app.js'
         },
 
         output: {
             path: path.resolve(__dirname, '../dist'),
             publicPath: '/',
-            filename: 'assets/js/[name]-bundle-[hash:5].js',
-            chunkFilename: 'assets/js/[name]-bundle-[hash:5].js' // 动态打包名称
+            filename: 'assets/js/[name]-bundle-[chunkhash:5].js',
+            chunkFilename: 'assets/js/[name]-bundle-[chunkhash:5].js' // 动态打包名称
         },
 
         // resolve: { 本地引入需要指定路径

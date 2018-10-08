@@ -19,6 +19,9 @@ $.get('/api/comments/show', {
     page: 1
 }, function (data) {
     console.log(data)
+    console.log(data)
+    console.log(data)
+    console.log(data)
 })
 
 if (module.hot) {

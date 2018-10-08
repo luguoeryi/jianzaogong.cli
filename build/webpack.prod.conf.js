@@ -10,7 +10,11 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
     plugins: [
 
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin(),
+
+        new webpack.NamedChunksPlugin(), // 模块id换成模块名称代替 -- 用于长缓存
+
+        new webpack.NamedModulesPlugin(), // 解决模块引入位置变化导致的hash变化 -- 用于长缓存
 
         new PurifyCSS({
             paths: glob.sync([
@@ -21,7 +25,14 @@ module.exports = {
 
         // 提取公共代码
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest'
+            name: 'vendor',
+            minChunks: Infinity
+        }),
+
+        // 提取公共代码
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            chunks: ['vendor']
         }),
 
         new HtmlWebpackInlineChunkPlugin({
